@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "name": "Frontend",
+      "path": "./frontend",
+    },
+    {
+      "name": "Backend",
+      "path": "./backend",
+    },
+    {
+      "name": "Shared",
+      "path": "./shared",
+    },
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+  },
+}

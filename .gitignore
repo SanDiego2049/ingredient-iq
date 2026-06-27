@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Environment variables
+.env
+frontend/.env
+backend/.env
+
+# Vite build output
+frontend/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+nodemon-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/*.log
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
