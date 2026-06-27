@@ -62,3 +62,21 @@ create policy "Users can update their own scans"
 create policy "Users can delete their own scans"
   on public.scans for delete
   using (auth.uid() = user_id);
+
+-- Creates a matching profiles row whenever a new user signs up,
+-- regardless of which auth method was used
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  insert into public.profiles (id, display_name, created_at, updated_at)
+  values (new.id, new.raw_user_meta_data->>'display_name', now(), now());
+  return new;
+end;
+$$;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
