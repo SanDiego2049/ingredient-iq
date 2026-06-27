@@ -1,12 +1,12 @@
 const { createClient } = require('@supabase/supabase-js')
 
 const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY
 
-if (!supabaseUrl || !supabaseServiceRoleKey) {
+if (!supabaseUrl || !supabaseSecretKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey)
+const supabase = createClient(supabaseUrl, supabaseSecretKey)
 
 module.exports = { supabase }
