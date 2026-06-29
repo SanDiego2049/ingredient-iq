@@ -1,7 +1,11 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai')
 const { buildAnalysisPrompt } = require('../utils/geminiPrompt')
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+let genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+
+function _setClientForTesting(fakeClient) {
+  genAI = fakeClient
+}
 
 async function analyseIngredients(ingredients) {
   const model = genAI.getGenerativeModel({
@@ -9,7 +13,22 @@ async function analyseIngredients(ingredients) {
   })
 
   const prompt = buildAnalysisPrompt(ingredients)
-  const result = await model.generateContent(prompt)
+
+  let result
+  try {
+    result = await model.generateContent(prompt)
+  } catch (err) {
+    if (err.message && err.message.includes('503')) {
+      const friendlyError = new Error(
+        'The AI analysis service is temporarily busy. Please try again in a moment.'
+      )
+      friendlyError.statusCode = 503
+      friendlyError.isOperational = true
+      throw friendlyError
+    }
+    throw err
+  }
+
   const text = result.response.text()
 
   const cleaned = text
@@ -27,4 +46,4 @@ async function analyseIngredients(ingredients) {
   }
 }
 
-module.exports = { analyseIngredients }
+module.exports = { analyseIngredients, _setClientForTesting }
