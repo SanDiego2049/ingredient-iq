@@ -1,5 +1,5 @@
 const { supabase } = require('../services/supabaseService')
-const { analyseIngredients } = require('../services/geminiService')
+const { analyseIngredients } = require('../services/aiService')
 const { success, fail } = require('../utils/responseHelpers')
 
 async function analyse(req, res, next) {
