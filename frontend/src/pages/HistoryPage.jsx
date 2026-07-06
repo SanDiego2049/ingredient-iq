@@ -89,7 +89,7 @@ function HistoryPage() {
         ) : (
           <>
             {guestScans.length > 0 ? (
-              <GuestHistoryOverlay />
+              <GuestHistoryOverlay scans={guestScans} />
             ) : (
               <EmptyHistoryState />
             )}
