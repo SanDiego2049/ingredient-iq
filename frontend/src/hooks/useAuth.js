@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useAuthStore } from '@/store/authStore'
 import { getProfile } from '@/services/authService'
+import { migrateGuestScans } from '@/services/migrateService'
+import { getGuestScans, clearGuestScans } from '@/utils/localStorage'
 
 export function useAuth() {
   const {
@@ -36,7 +38,7 @@ export function useAuth() {
     )
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         setSession(session)
         setUser(session?.user ?? null)
         if (session) {
@@ -45,6 +47,20 @@ export function useAuth() {
             setProfile(profileData)
           } catch (err) {
             console.error('Failed to fetch profile:', err)
+          }
+
+          if (event === 'SIGNED_IN') {
+            const guestScans = getGuestScans()
+            if (guestScans.length > 0) {
+              try {
+                await migrateGuestScans(guestScans, session.access_token)
+                clearGuestScans()
+              } catch (err) {
+                console.error('Failed to migrate guest scans:', err)
+                // localStorage is intentionally not cleared on failure
+                // so migration can be retried on next sign-in
+              }
+            }
           }
         } else {
           setProfile(null)
