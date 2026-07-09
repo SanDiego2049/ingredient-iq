@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { ScanLine } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import SummaryCard from '@/components/result/SummaryCard'
 import BreakdownPanel from '@/components/result/BreakdownPanel'
 import Disclaimer from '@/components/result/Disclaimer'
@@ -80,7 +81,16 @@ function ResultPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 bg-white border-b border-gray-100">
-        <h1 className="font-bold text-gray-800 text-lg">Result</h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/')}
+            aria-label="Go back"
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <ArrowLeft size={22} />
+          </button>
+          <h1 className="font-bold text-gray-800 text-lg">Result</h1>
+        </div>
         <button
           onClick={() => navigate('/history')}
           aria-label="View history"
