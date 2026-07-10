@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { History, User, FlipHorizontal, ImagePlus } from 'lucide-react'
+import { History, User, FlipHorizontal, ImagePlus, LogIn } from 'lucide-react'
+import { useUiStore } from '@/store/uiStore'
 import CameraViewfinder from '@/components/scanner/CameraViewfinder'
 import CaptureButton from '@/components/scanner/CaptureButton'
 import TextReviewDrawer from '@/components/scanner/TextReviewDrawer'
@@ -31,6 +32,7 @@ function ScannerPage() {
   const { addGuestScan } = useGuestScans()
   const { session, user } = useAuthStore()
   const { setCurrentIngredients } = useScanStore()
+  const { openAuthModal } = useUiStore()
 
   async function handleCapturedImage(imageData) {
     const text = await extractText(imageData)
@@ -142,13 +144,21 @@ function ScannerPage() {
           >
             <History size={24} />
           </button>
-          {user && (
+          {user ? (
             <button
               onClick={() => navigate('/profile')}
               aria-label="View profile"
               className="text-green-400 hover:text-green-700 transition-colors"
             >
               <User size={24} />
+            </button>
+          ) : (
+            <button
+              onClick={openAuthModal}
+              aria-label="Sign in"
+              className="text-green-400 hover:text-green-700 transition-colors"
+            >
+              <LogIn size={24} />
             </button>
           )}
         </div>
