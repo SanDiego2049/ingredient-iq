@@ -79,16 +79,18 @@ function ScannerPage() {
   async function runAnalysis(ingredients) {
     const result = await analyse(ingredients)
     if (!result) return
-    const hash = await hashIngredients(ingredients)
-    if (!session) {
-      addGuestScan({
-        product_name: 'Unnamed Product',
-        raw_ingredients: ingredients,
-        ingredient_hash: hash,
-        verdict: result.verdict,
-        summary: result.summary,
-        analysis_json: result,
-      })
+    if (result.verdict !== 'UNRECOGNISED') {
+      const hash = await hashIngredients(ingredients)
+      if (!session) {
+        addGuestScan({
+          product_name: 'Unnamed Product',
+          raw_ingredients: ingredients,
+          ingredient_hash: hash,
+          verdict: result.verdict,
+          summary: result.summary,
+          analysis_json: result,
+        })
+      }
     }
     navigate('/result')
   }

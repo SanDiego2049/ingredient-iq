@@ -80,3 +80,8 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- Unique constraint required for upsert conflict resolution in guest scan migration
+alter table public.scans
+add constraint scans_ingredient_hash_user_id_unique
+unique (ingredient_hash, user_id);

@@ -129,7 +129,7 @@ async function migrate(req, res) {
 
   const { data, error } = await supabase
     .from('scans')
-    .upsert(toInsert, { onConflict: 'ingredient_hash' })
+    .upsert(toInsert, { onConflict: 'ingredient_hash,user_id' })
     .select()
 
   if (error) {

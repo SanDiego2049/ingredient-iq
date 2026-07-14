@@ -48,13 +48,47 @@ export function useCamera() {
     startCamera(newFacing)
   }
 
-  function captureImage() {
+  // function captureImage() {
+  //   if (!videoRef.current) return null
+  //   const canvas = document.createElement('canvas')
+  //   canvas.width = videoRef.current.videoWidth
+  //   canvas.height = videoRef.current.videoHeight
+  //   const ctx = canvas.getContext('2d')
+  //   ctx.drawImage(videoRef.current, 0, 0)
+  //   return canvas.toDataURL('image/jpeg')
+  // }
+
+  function captureImage(cropSpec = null) {
     if (!videoRef.current) return null
+    const video = videoRef.current
+    const videoWidth = video.videoWidth
+    const videoHeight = video.videoHeight
+    if (!videoWidth || !videoHeight) return null
+
+    if (!cropSpec) {
+      const canvas = document.createElement('canvas')
+      canvas.width = videoWidth
+      canvas.height = videoHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(video, 0, 0)
+      return canvas.toDataURL('image/jpeg')
+    }
+
     const canvas = document.createElement('canvas')
-    canvas.width = videoRef.current.videoWidth
-    canvas.height = videoRef.current.videoHeight
+    canvas.width = cropSpec.width
+    canvas.height = cropSpec.height
     const ctx = canvas.getContext('2d')
-    ctx.drawImage(videoRef.current, 0, 0)
+    ctx.drawImage(
+      video,
+      cropSpec.x,
+      cropSpec.y,
+      cropSpec.width,
+      cropSpec.height,
+      0,
+      0,
+      cropSpec.width,
+      cropSpec.height
+    )
     return canvas.toDataURL('image/jpeg')
   }
 

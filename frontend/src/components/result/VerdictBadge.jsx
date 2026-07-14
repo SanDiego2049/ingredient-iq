@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { CheckCircle, XCircle, AlertTriangle, HelpCircle } from 'lucide-react'
 import { VERDICTS } from '@/constants/verdicts'
 
 const config = {
@@ -16,6 +16,11 @@ const config = {
     icon: AlertTriangle,
     label: 'Caution',
     colours: 'bg-amber-100 text-amber-700 border-amber-300',
+  },
+  [VERDICTS.UNRECOGNISED]: {
+    icon: HelpCircle,
+    label: 'Unrecognised',
+    colours: 'bg-gray-100 text-gray-600 border-gray-300',
   },
 }
 
