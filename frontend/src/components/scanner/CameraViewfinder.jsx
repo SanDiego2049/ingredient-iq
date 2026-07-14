@@ -164,7 +164,9 @@ const CameraViewfinder = forwardRef(function CameraViewfinder(
         muted
         aria-label="Camera viewfinder"
         className="w-full h-full object-cover"
-      />
+      >
+        <track kind="captions" srcLang="en" label="English" default />
+      </video>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           ref={boxRef}

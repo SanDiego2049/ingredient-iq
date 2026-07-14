@@ -15,7 +15,7 @@ function ScanCard({ scan }) {
         <span className="font-medium text-gray-800 text-sm">
           {scan.product_name}
         </span>
-        <span className="text-xs text-gray-400">
+        <span className="text-xs text-gray-500">
           {formatDate(scan.scanned_at)}
         </span>
       </div>
