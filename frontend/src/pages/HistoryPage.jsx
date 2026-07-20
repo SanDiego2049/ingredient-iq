@@ -42,7 +42,7 @@ function HistoryPage() {
         <h1 className="font-bold text-gray-800 text-lg">History</h1>
       </div>
 
-      <div className="flex flex-col gap-4 px-4 py-6 max-w-lg mx-auto w-full">
+      <main className="flex flex-col gap-4 px-4 py-6 max-w-lg mx-auto w-full">
         {user ? (
           <>
             <SearchBar
@@ -95,7 +95,7 @@ function HistoryPage() {
             )}
           </>
         )}
-      </div>
+      </main>
 
       <AuthModal />
     </div>

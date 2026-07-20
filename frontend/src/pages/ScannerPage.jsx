@@ -79,16 +79,18 @@ function ScannerPage() {
   async function runAnalysis(ingredients) {
     const result = await analyse(ingredients)
     if (!result) return
-    const hash = await hashIngredients(ingredients)
-    if (!session) {
-      addGuestScan({
-        product_name: 'Unnamed Product',
-        raw_ingredients: ingredients,
-        ingredient_hash: hash,
-        verdict: result.verdict,
-        summary: result.summary,
-        analysis_json: result,
-      })
+    if (result.verdict !== 'UNRECOGNISED') {
+      const hash = await hashIngredients(ingredients)
+      if (!session) {
+        addGuestScan({
+          product_name: 'Unnamed Product',
+          raw_ingredients: ingredients,
+          ingredient_hash: hash,
+          verdict: result.verdict,
+          summary: result.summary,
+          analysis_json: result,
+        })
+      }
     }
     navigate('/result')
   }
@@ -135,6 +137,9 @@ function ScannerPage() {
     >
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-4">
+        <main className="sr-only" aria-label="Scanner">
+          <h1>IngredientIQ Smart Food Safety Scanner</h1>
+        </main>
         <h1 className="text-green-400 font-bold text-lg">IngredientIQ</h1>
         <div className="flex items-center gap-4">
           <button
