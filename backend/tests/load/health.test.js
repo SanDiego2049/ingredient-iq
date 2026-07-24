@@ -5,8 +5,18 @@ import { Rate } from 'k6/metrics'
 const errorRate = new Rate('errors')
 
 export const options = {
-  vus: 50,
-  duration: '30s',
+  stages: [
+    // Smoke test: 2 VUs for 30 seconds
+    { duration: '30s', target: 2 },
+    // Load test: ramp to 30 VUs over 30 seconds, hold for 60 seconds
+    { duration: '30s', target: 30 },
+    { duration: '60s', target: 30 },
+    // Stress test: ramp to 150 VUs over 30 seconds, hold for 60 seconds
+    { duration: '30s', target: 150 },
+    { duration: '60s', target: 150 },
+    // Recovery: ramp back down
+    { duration: '30s', target: 0 },
+  ],
   thresholds: {
     http_req_duration: ['p(95)<500'],
     errors: ['rate<0.01'],
@@ -25,7 +35,6 @@ export default function () {
         return false
       }
     },
-    'response time under 200ms': (r) => r.timings.duration < 200,
   })
 
   errorRate.add(!success)

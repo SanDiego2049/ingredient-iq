@@ -8,8 +8,18 @@ const errorRate = new Rate('errors')
 const TOKEN = process.env.K6_TOKEN || ''
 
 export const options = {
-  vus: 20,
-  duration: '30s',
+  stages: [
+    // Smoke test: 2 VUs for 30 seconds
+    { duration: '30s', target: 2 },
+    // Load test: ramp to 15 VUs over 30 seconds, hold for 60 seconds
+    { duration: '30s', target: 15 },
+    { duration: '60s', target: 15 },
+    // Stress test: ramp to 50 VUs over 30 seconds, hold for 60 seconds
+    { duration: '30s', target: 50 },
+    { duration: '60s', target: 50 },
+    // Recovery: ramp back down
+    { duration: '30s', target: 0 },
+  ],
   thresholds: {
     http_req_duration: ['p(95)<2000'],
     errors: ['rate<0.05'],
