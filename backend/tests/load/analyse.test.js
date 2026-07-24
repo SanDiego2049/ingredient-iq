@@ -7,10 +7,21 @@ const rateLimitHits = new Counter('rate_limit_hits')
 const aiUnavailable = new Counter('ai_unavailable')
 
 export const options = {
-  vus: 5,
-  duration: '60s',
+  stages: [
+    // Smoke test: 2 VUs for 30 seconds
+    { duration: '30s', target: 2 },
+    // Load test: ramp to 5 VUs over 30 seconds, hold for 60 seconds
+    { duration: '30s', target: 5 },
+    { duration: '60s', target: 5 },
+    // Stress test: ramp to 10 VUs over 30 seconds, hold for 60 seconds
+    { duration: '30s', target: 10 },
+    { duration: '60s', target: 10 },
+    // Recovery: ramp back down
+    { duration: '30s', target: 0 },
+  ],
   thresholds: {
     errors: ['rate<0.8'],
+    http_req_duration: ['p(99)<5000'],
   },
 }
 
