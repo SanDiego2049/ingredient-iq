@@ -26,7 +26,14 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: (origin, callback) => {
+      const allowed = (process.env.CLIENT_ORIGIN || '').replace(/\/$/, '')
+      if (!origin || origin === allowed) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     credentials: true,
   })
 )
