@@ -5,7 +5,7 @@ import { Rate } from 'k6/metrics'
 const errorRate = new Rate('errors')
 
 // Replace this with a fresh token from your browser before running
-const TOKEN = process.env.K6_TOKEN || ''
+const TOKEN = __ENV.K6_TOKEN || ''
 
 export const options = {
   stages: [
@@ -27,11 +27,14 @@ export const options = {
 }
 
 export default function () {
-  const res = http.get('http://localhost:3000/api/scans?page=1', {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  })
+  const res = http.get(
+    'https://ingredient-iq-m8lv.onrender.com/api/scans?page=1',
+    {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  )
 
   const success = check(res, {
     'status is 200': (r) => r.status === 200,

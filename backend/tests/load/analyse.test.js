@@ -27,7 +27,7 @@ export const options = {
 
 export default function () {
   const res = http.post(
-    'http://localhost:3000/api/scans/analyse',
+    'https://ingredient-iq-m8lv.onrender.com/api/scans/analyse',
     JSON.stringify({
       ingredients: 'Sugar, Salt, Water, Citric Acid, Sodium Benzoate',
     }),

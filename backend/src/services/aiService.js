@@ -16,7 +16,12 @@ function createGroqAdapter() {
         temperature: 0.1,
       })
     } catch (err) {
-      if (err.status === 503 || (err.message && err.message.includes('503'))) {
+      if (
+        err.status === 429 ||
+        err.status === 503 ||
+        (err.message && err.message.includes('429')) ||
+        (err.message && err.message.includes('503'))
+      ) {
         const friendlyError = new Error(
           'The AI analysis service is temporarily busy. Please try again in a moment.'
         )
@@ -56,7 +61,10 @@ function createGeminiAdapter() {
     try {
       result = await model.generateContent(prompt)
     } catch (err) {
-      if (err.message && err.message.includes('503')) {
+      if (
+        (err.message && err.message.includes('429')) ||
+        (err.message && err.message.includes('503'))
+      ) {
         const friendlyError = new Error(
           'The AI analysis service is temporarily busy. Please try again in a moment.'
         )

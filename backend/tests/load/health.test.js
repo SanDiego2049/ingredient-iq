@@ -24,7 +24,7 @@ export const options = {
 }
 
 export default function () {
-  const res = http.get('http://localhost:3000/api/health')
+  const res = http.get('https://ingredient-iq-m8lv.onrender.com/api/health')
 
   const success = check(res, {
     'status is 200': (r) => r.status === 200,
