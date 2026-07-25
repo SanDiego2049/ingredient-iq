@@ -4,11 +4,19 @@ import { useScanStore } from '@/store/scanStore'
 
 export function useAnalysis() {
   const [error, setError] = useState(null)
+  const [slowMessage, setSlowMessage] = useState(null)
   const { isAnalysing, setIsAnalysing, setLastResult } = useScanStore()
 
   async function analyse(ingredients) {
     setIsAnalysing(true)
     setError(null)
+    setSlowMessage(null)
+
+    const slowTimer = setTimeout(() => {
+      setSlowMessage(
+        'The server is waking up after a period of inactivity. This may take up to 30 seconds. Please wait.'
+      )
+    }, 5000)
 
     try {
       const response = await analyseIngredients(ingredients)
@@ -22,9 +30,11 @@ export function useAnalysis() {
       }
       return null
     } finally {
+      clearTimeout(slowTimer)
+      setSlowMessage(null)
       setIsAnalysing(false)
     }
   }
 
-  return { analyse, isAnalysing, error }
+  return { analyse, isAnalysing, error, slowMessage }
 }
