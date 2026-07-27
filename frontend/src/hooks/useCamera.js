@@ -19,6 +19,15 @@ async function startCamera(facing = facingMode) {
 
     if (videoRef.current) {
       videoRef.current.srcObject = newStream
+
+      await new Promise((resolve) => {
+        if (videoRef.current.readyState >= 1) {
+          resolve()
+        } else {
+          videoRef.current.onloadedmetadata = resolve
+        }
+      })
+
       try {
         await videoRef.current.play()
       } catch (playErr) {
@@ -52,16 +61,6 @@ async function startCamera(facing = facingMode) {
     setFacingMode(newFacing)
     startCamera(newFacing)
   }
-
-  // function captureImage() {
-  //   if (!videoRef.current) return null
-  //   const canvas = document.createElement('canvas')
-  //   canvas.width = videoRef.current.videoWidth
-  //   canvas.height = videoRef.current.videoHeight
-  //   const ctx = canvas.getContext('2d')
-  //   ctx.drawImage(videoRef.current, 0, 0)
-  //   return canvas.toDataURL('image/jpeg')
-  // }
 
   function captureImage(cropSpec = null) {
     if (!videoRef.current) return null
