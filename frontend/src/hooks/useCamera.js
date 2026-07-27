@@ -7,32 +7,37 @@ export function useCamera() {
   const [error, setError] = useState(null)
   const [isReady, setIsReady] = useState(false)
 
-  async function startCamera(facing = facingMode) {
-    try {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop())
-      }
-
-      const newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing },
-      })
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = newStream
-      }
-
-      setStream(newStream)
-      setError(null)
-      setIsReady(true)
-    } catch (err) {
-      setError(
-        err.name === 'NotAllowedError'
-          ? 'Camera permission denied. Please use manual text entry instead.'
-          : 'Camera not available on this device.'
-      )
-      setIsReady(false)
+async function startCamera(facing = facingMode) {
+  try {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop())
     }
+
+    const newStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: facing } },
+    })
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = newStream
+      try {
+        await videoRef.current.play()
+      } catch (playErr) {
+        console.error('Video play failed:', playErr)
+      }
+    }
+
+    setStream(newStream)
+    setError(null)
+    setIsReady(true)
+  } catch (err) {
+    setError(
+      err.name === 'NotAllowedError'
+        ? 'Camera permission denied. Please use manual text entry instead.'
+        : 'Camera not available on this device.'
+    )
+    setIsReady(false)
   }
+}
 
   function stopCamera() {
     if (stream) {

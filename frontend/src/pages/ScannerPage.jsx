@@ -27,7 +27,7 @@ function ScannerPage() {
   const [cameraError, setCameraError] = useState(null)
 
   const { extractText, progress, isProcessing } = useOCR()
-  const { analyse, isAnalysing, error } = useAnalysis()
+  const { analyse, isAnalysing, error, slowMessage } = useAnalysis()
   const { checkForRepeat } = useRepeatDetection()
   const { addGuestScan } = useGuestScans()
   const { session, user } = useAuthStore()
@@ -266,9 +266,16 @@ function ScannerPage() {
 
       {/* Analysing overlay */}
       {isAnalysing && (
-        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-4">
+        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-4 px-6">
           <Spinner size="lg" />
-          <p className="text-white text-sm">Analysing ingredients...</p>
+          <p className="text-white text-sm text-center">
+            Analysing ingredients...
+          </p>
+          {slowMessage && (
+            <p className="text-white/70 text-xs text-center max-w-xs">
+              {slowMessage}
+            </p>
+          )}
         </div>
       )}
 
