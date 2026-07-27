@@ -7,46 +7,41 @@ export function useCamera() {
   const [error, setError] = useState(null)
   const [isReady, setIsReady] = useState(false)
 
-async function startCamera(facing = facingMode) {
-  try {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop())
-    }
+  async function startCamera(facing = facingMode) {
+    try {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop())
+      }
 
-    const newStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: facing } },
-    })
-
-    if (videoRef.current) {
-      videoRef.current.srcObject = newStream
-
-      await new Promise((resolve) => {
-        if (videoRef.current.readyState >= 1) {
-          resolve()
-        } else {
-          videoRef.current.onloadedmetadata = resolve
-        }
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: facing } },
       })
 
-      try {
-        await videoRef.current.play()
-      } catch (playErr) {
-        console.error('Video play failed:', playErr)
+      if (videoRef.current) {
+        videoRef.current.srcObject = newStream
+        setTimeout(() => {
+          if (videoRef.current) {
+            videoRef.current.play().catch((err) => {
+              if (err.name !== 'AbortError') {
+                console.error('Video play failed:', err)
+              }
+            })
+          }
+        }, 100)
       }
-    }
 
-    setStream(newStream)
-    setError(null)
-    setIsReady(true)
-  } catch (err) {
-    setError(
-      err.name === 'NotAllowedError'
-        ? 'Camera permission denied. Please use manual text entry instead.'
-        : 'Camera not available on this device.'
-    )
-    setIsReady(false)
+      setStream(newStream)
+      setError(null)
+      setIsReady(true)
+    } catch (err) {
+      setError(
+        err.name === 'NotAllowedError'
+          ? 'Camera permission denied. Please use manual text entry instead.'
+          : 'Camera not available on this device.'
+      )
+      setIsReady(false)
+    }
   }
-}
 
   function stopCamera() {
     if (stream) {
