@@ -29,22 +29,17 @@ const CameraViewfinder = forwardRef(function CameraViewfinder(
         const videoRect = video.getBoundingClientRect()
         const boxRect = boxRef.current.getBoundingClientRect()
 
-        // object-cover scale: video is scaled up to fill the element
-        // whichever dimension fills first determines the scale
         const scale = Math.max(
           videoRect.width / videoWidth,
           videoRect.height / videoHeight
         )
 
-        // how far the rendered video extends beyond the element edges
         const offsetX = (videoWidth * scale - videoRect.width) / 2
         const offsetY = (videoHeight * scale - videoRect.height) / 2
 
-        // guide box position relative to the video element in screen pixels
         const boxX = boxRect.left - videoRect.left
         const boxY = boxRect.top - videoRect.top
 
-        // convert to actual video pixel coordinates
         const x = Math.round((boxX + offsetX) / scale)
         const y = Math.round((boxY + offsetY) / scale)
         const width = Math.round(boxRect.width / scale)
@@ -88,14 +83,14 @@ const CameraViewfinder = forwardRef(function CameraViewfinder(
   }
 
   return (
-    <div className="relative w-full h-full" style={{ minHeight: '100%' }}>
+    <div className="relative w-full h-full">
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         aria-label="Camera viewfinder"
-        className="w-full h-full min-h-full object-cover"
+        className="w-full h-full object-cover"
       >
         <track kind="captions" srcLang="en" label="English" default />
       </video>

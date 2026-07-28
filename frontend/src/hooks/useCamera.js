@@ -19,15 +19,6 @@ export function useCamera() {
 
       if (videoRef.current) {
         videoRef.current.srcObject = newStream
-        setTimeout(() => {
-          if (videoRef.current) {
-            videoRef.current.play().catch((err) => {
-              if (err.name !== 'AbortError') {
-                console.error('Video play failed:', err)
-              }
-            })
-          }
-        }, 100)
       }
 
       setStream(newStream)
