@@ -88,14 +88,14 @@ const CameraViewfinder = forwardRef(function CameraViewfinder(
   }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full" style={{ minHeight: '100%' }}>
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         aria-label="Camera viewfinder"
-        className="w-full h-full object-cover"
+        className="w-full h-full min-h-full object-cover"
       >
         <track kind="captions" srcLang="en" label="English" default />
       </video>
