@@ -1,4 +1,4 @@
-import { get, post, del } from './api'
+import { get, post, del, patch } from './api'
 
 export function analyseIngredients(ingredients) {
   return post('/api/scans/analyse', { ingredients })
@@ -23,4 +23,8 @@ export function deleteScan(id, token) {
 
 export function checkHash(hash, token) {
   return get(`/api/scans/check/${hash}`, token)
+}
+
+export function updateProductName(id, productName, token) {
+  return patch(`/api/scans/${id}/name`, { product_name: productName }, token)
 }

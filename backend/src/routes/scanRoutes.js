@@ -8,6 +8,7 @@ const {
   remove,
   migrate,
   checkHash,
+  updateProductName,
 } = require('../controllers/scanController')
 const { requireAuth } = require('../middleware/requireAuth')
 const { analyseLimiter } = require('../middleware/rateLimiter')
@@ -276,10 +277,9 @@ router.get('/check/:hash', requireAuth, checkHash)
 
 /**
  * @swagger
- * /api/scans/{id}:
- *   get:
- *     summary: Get a single scan record by ID
- *     description: Returns the full scan record including analysis_json for the given ID, provided it belongs to the authenticated user.
+ * /api/scans/{id}/name:
+ *   patch:
+ *     summary: Update the product name of a scan
  *     tags:
  *       - Scans
  *     security:
@@ -291,33 +291,28 @@ router.get('/check/:hash', requireAuth, checkHash)
  *         schema:
  *           type: string
  *           format: uuid
- *         description: UUID of the scan record
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - product_name
+ *             properties:
+ *               product_name:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Scan returned successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   $ref: '#/components/schemas/Scan'
+ *         description: Product name updated successfully
+ *       400:
+ *         description: Invalid product name
  *       401:
- *         description: Missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       404:
- *         description: Scan not found or does not belong to this user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
+ *         description: Unauthorised
+ *       500:
+ *         description: Update failed
  */
+router.patch('/:id/name', requireAuth, updateProductName)
 router.get('/:id', requireAuth, getById)
 
 /**

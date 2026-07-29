@@ -27,5 +27,5 @@ export function useScanDetail(id) {
     fetchScan()
   }, [id, session])
 
-  return { scan, loading, error }
+  return { scan, setScan, loading, error }
 }

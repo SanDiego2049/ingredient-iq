@@ -3,13 +3,14 @@ import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { signUp, signInWithGoogle } from '@/services/authService'
 
-function RegisterForm({ onSuccess, onSwitchToLogin }) {
+function RegisterForm({ onSwitchToLogin }) {
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [submitted, setSubmitted] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -17,7 +18,7 @@ function RegisterForm({ onSuccess, onSwitchToLogin }) {
     setError(null)
     try {
       await signUp(email, password, displayName)
-      onSuccess()
+      setSubmitted(true)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -32,6 +33,29 @@ function RegisterForm({ onSuccess, onSwitchToLogin }) {
     } catch (err) {
       setError(err.message)
     }
+  }
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center gap-4 text-center py-4">
+        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+          <Mail size={24} className="text-green-600" aria-hidden="true" />
+        </div>
+        <h2 className="font-semibold text-gray-800">Check your email</h2>
+        <p className="text-sm text-gray-500">
+          We sent a confirmation link to <strong>{email}</strong>. Click the
+          link in that email to activate your account, then come back and sign
+          in.
+        </p>
+        <button
+          type="button"
+          onClick={onSwitchToLogin}
+          className="text-green-600 text-sm font-medium hover:underline"
+        >
+          Go to sign in
+        </button>
+      </div>
+    )
   }
 
   return (

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Trash2 } from 'lucide-react'
+import { ArrowLeft, Trash2, Pencil, Check, X } from 'lucide-react'
+import { updateProductName } from '@/services/scanService'
 import SummaryCard from '@/components/result/SummaryCard'
 import BreakdownPanel from '@/components/result/BreakdownPanel'
 import Disclaimer from '@/components/result/Disclaimer'
@@ -16,9 +17,12 @@ function ScanDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { session } = useAuthStore()
-  const { scan, loading, error } = useScanDetail(id)
+  const { scan, setScan,loading, error } = useScanDetail(id)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [nameInput, setNameInput] = useState('')
+  const [savingName, setSavingName] = useState(false)
 
   async function handleDelete() {
     setDeleting(true)
@@ -32,6 +36,21 @@ function ScanDetailPage() {
       setShowDeleteModal(false)
     }
   }
+
+  async function handleSaveName() {
+    if (!nameInput.trim()) return
+    setSavingName(true)
+    try {
+      await updateProductName(id, nameInput.trim(), session.access_token)
+      setScan({ ...scan, product_name: nameInput.trim() }) 
+      setEditingName(false)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSavingName(false)
+    }
+  }
+
 
   if (loading) {
     return (
@@ -68,9 +87,48 @@ function ScanDetailPage() {
             <ArrowLeft size={22} />
           </button>
           <div>
-            <h1 className="font-bold text-gray-800 text-base leading-tight">
-              {scan.product_name}
-            </h1>
+            {editingName ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  className="text-sm font-bold text-gray-800 border-b border-green-500 focus:outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={handleSaveName}
+                  disabled={savingName}
+                  aria-label="Save name"
+                  className="text-green-600 hover:text-green-700"
+                >
+                  <Check size={16} />
+                </button>
+                <button
+                  onClick={() => setEditingName(false)}
+                  aria-label="Cancel edit"
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <h1 className="font-bold text-gray-800 text-base leading-tight">
+                  {scan.product_name}
+                </h1>
+                <button
+                  onClick={() => {
+                    setNameInput(scan.product_name)
+                    setEditingName(true)
+                  }}
+                  aria-label="Edit product name"
+                  className="text-gray-400 hover:text-green-600"
+                >
+                  <Pencil size={14} />
+                </button>
+              </div>
+            )}
             <p className="text-xs text-gray-400">
               {formatDateTime(scan.scanned_at)}
             </p>

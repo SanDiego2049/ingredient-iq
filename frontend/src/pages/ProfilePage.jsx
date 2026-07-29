@@ -11,7 +11,7 @@ import { clearGuestScans } from '@/utils/localStorage'
 
 function ProfilePage() {
   const navigate = useNavigate()
-  const { user, session } = useAuthStore()
+  const { user, session, profile } = useAuthStore()
   const { loading } = useAuth()
   const [signingOut, setSigningOut] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -76,7 +76,7 @@ function ProfilePage() {
           </div>
           <div className="flex flex-col">
             <span className="font-medium text-gray-800">
-              {user?.user_metadata?.full_name ?? 'User'}
+              {profile?.display_name || user?.email?.split('@')[0] || 'User'}
             </span>
             <span className="text-sm text-gray-400">{user?.email}</span>
           </div>
