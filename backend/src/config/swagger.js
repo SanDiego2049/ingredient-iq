@@ -14,6 +14,10 @@ const options = {
         url: 'http://localhost:3000',
         description: 'Local development server',
       },
+      {
+        url: 'https://ingredient-iq-ochre.vercel.app',
+        description: 'Production server',
+      },
     ],
     components: {
       securitySchemes: {

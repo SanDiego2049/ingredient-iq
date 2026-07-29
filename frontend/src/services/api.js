@@ -41,3 +41,11 @@ export function del(path, token) {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   })
 }
+
+export function patch(path, body, token) {
+  return request(path, {
+    method: 'PATCH',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: JSON.stringify(body),
+  })
+}

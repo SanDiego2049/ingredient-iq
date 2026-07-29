@@ -156,4 +156,40 @@ async function checkHash(req, res) {
   return success(res, { exists: true, scan: data })
 }
 
-module.exports = { analyse, save, list, getById, remove, migrate, checkHash }
+async function updateProductName(req, res) {
+  const { id } = req.params
+  const { product_name } = req.body
+
+  if (
+    !product_name ||
+    typeof product_name !== 'string' ||
+    product_name.trim().length === 0
+  ) {
+    return fail(res, 'product_name must be a non-empty string', 400)
+  }
+
+  const { data, error } = await supabase
+    .from('scans')
+    .update({ product_name: product_name.trim() })
+    .eq('id', id)
+    .eq('user_id', req.user.id)
+    .select()
+    .single()
+
+  if (error || !data) {
+    return fail(res, 'Failed to update product name', 500)
+  }
+
+  return success(res, data)
+}
+
+module.exports = {
+  analyse,
+  save,
+  list,
+  getById,
+  remove,
+  migrate,
+  checkHash,
+  updateProductName,
+}
