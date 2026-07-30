@@ -86,6 +86,7 @@ const CameraViewfinder = forwardRef(function CameraViewfinder(
     <div className="relative w-full h-full">
       <video
         ref={videoRef}
+        autoPlay
         playsinline
         muted
         aria-label="Camera viewfinder"
