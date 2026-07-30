@@ -86,10 +86,7 @@ const CameraViewfinder = forwardRef(function CameraViewfinder(
     <div className="relative w-full h-full">
       <video
         ref={videoRef}
-        autoPlay
-        playsInline
-        // ensure older WebKit recognizes inline playback
-        webkit-playsinline=""
+        playsinline
         muted
         aria-label="Camera viewfinder"
         className="w-full h-full object-cover"
