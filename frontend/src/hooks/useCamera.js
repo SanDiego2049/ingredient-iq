@@ -14,36 +14,11 @@ export function useCamera() {
       }
 
       const newStream = await navigator.mediaDevices.getUserMedia({
-        // use a plain facingMode value for broader compatibility
-        video: { facingMode: facing },
+        video: { facingMode: { ideal: facing } },
       })
 
       if (videoRef.current) {
-        // ensure inline playback attributes for iOS and attach stream
-        try {
-          // set attributes that help iOS allow inline autoplay
-          videoRef.current.playsInline = true
-          videoRef.current.setAttribute('playsinline', '')
-          // older WebKit may require the webkit-playsinline attribute
-          videoRef.current.setAttribute('webkit-playsinline', '')
-
-          videoRef.current.srcObject = newStream
-
-          // Some browsers (notably iOS Safari / WKWebView) require an explicit play()
-          // call after setting srcObject even when `autoPlay` is present on the element.
-          // Call play() but ignore any promise rejection (autoplay policy fallback).
-          const playResult = videoRef.current.play()
-          if (playResult && typeof playResult.then === 'function') {
-            playResult
-              .then(() => console.log('CAMERA PLAY RESOLVED'))
-              .catch((e) =>
-                console.log('CAMERA PLAY REJECTED:', e.name, e.message)
-              )
-          }
-        } catch (e) {
-          console.log('CAMERA SETUP FALLBACK TRIGGERED:', e.name, e.message)
-          videoRef.current.srcObject = newStream
-        }
+        videoRef.current.srcObject = newStream
       }
 
       setStream(newStream)
