@@ -35,6 +35,18 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="IngredientIQ" />
+
+  <!-- Temporary on-page console for iOS debugging. Only loads when the page URL includes ?debug=true. Remove this block once the camera issue is resolved. -->
+  <script>
+    if (new URLSearchParams(window.location.search).get('debug') === 'true') {
+      var erudaScript = document.createElement('script')
+      erudaScript.src = 'https://cdn.jsdelivr.net/npm/eruda'
+      erudaScript.onload = function () {
+        window.eruda.init()
+      }
+      document.head.appendChild(erudaScript)
+    }
+  </script>
 </head>
 
 <body>
